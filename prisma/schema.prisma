@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int           @id @default(autoincrement())
+  email       String        @unique
+  username    String
+  firstName   String?
+  lastName    String?
+  wallet      Wallet[]
+  Transaction Transaction[]
+}
+
+model Category {
+  id          Int          @id @default(autoincrement())
+  Name        String
+  Transaction Transaction?
+}
+
+model Wallet {
+  id          Int          @id @default(autoincrement())
+  name        String
+  walletType  Int
+  Balance     Decimal
+  userId      Int
+  user        User         @relation(fields: [userId], references: [id])
+  Transaction Transaction?
+}
+
+model Transaction {
+  id              Int      @id @default(autoincrement())
+  description     String
+  amount          Decimal
+  date            DateTime
+  transactionType Int
+  dateCreated     DateTime
+  userId          Int      @unique
+  categoryId      Int      @unique
+  walletId        Int      @unique
+  user            User     @relation(fields: [userId], references: [id])
+  category        Category @relation(fields: [categoryId], references: [id])
+  wallet          Wallet   @relation(fields: [walletId], references: [id])
+}
