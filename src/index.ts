@@ -1,6 +1,8 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
+import authRoute from "./routes/authentication";
+
 const prisma = new PrismaClient();
 
 dotenv.config();
@@ -17,7 +19,7 @@ async function getUsers() {
   // })
   // await prisma.category.create({
   //   data: {
-  //     Name: "Snacks",
+  //     Name: "Bills",
   //   },
   // })
   const users = await prisma.user.findMany();
@@ -27,6 +29,8 @@ async function getUsers() {
   console.log("wallet: ", wallet);
   console.log("category: ", category);
 }
+
+app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
   getUsers()
@@ -40,6 +44,10 @@ app.get("/", (req: Request, res: Response) => {
     });
   res.send("Express + TypeScript Server");
 });
+
+
+// Route initialization
+app.use("/api/auth", authRoute)
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
