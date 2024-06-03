@@ -1,6 +1,7 @@
 import jwt, { Secret } from "jsonwebtoken";
 
 export default function generateToken(id: number, email: string) {
+  // TODO -> MOVE SECRET TO ENV
   const SECRET_KEY: Secret = "your-secret-key-here";
 
   const payload = { id, email };

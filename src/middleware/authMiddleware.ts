@@ -2,7 +2,7 @@ import jwt, { Secret, JwtPayload } from "jsonwebtoken";
 
 import { Request, Response, NextFunction } from "express";
 
-// TODO -> MOVE TO ENV
+// TODO -> MOVE SECRET TO ENV
 export const SECRET_KEY: Secret = "your-secret-key-here";
 
 export interface CustomRequest extends Request {
@@ -16,7 +16,6 @@ const authMiddleware = async (
 ) => {
   try {
     const token = req.header("Authorization")?.replace("Bearer ", "");
-    console.log("token: ", token);
 
     if (!token) throw new Error();
 

@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import generateToken from "../utils/generateToken";
+import { RegisterUserRequestModel } from "../model/AuthModel";
 
 const prisma = new PrismaClient();
 
@@ -11,6 +12,14 @@ export async function registerUser(req: Request, res: Response) {
   const { email, username, password } = req.body;
 
   try {
+    const emailExist =  await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (emailExist)
+      return res.json({ success: false, message: "Email already exist." });
+
+    // TODO enforce strong password
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     await prisma.user.create({
@@ -18,7 +27,7 @@ export async function registerUser(req: Request, res: Response) {
         email,
         username,
         password: hashedPassword,
-      },
+      } as RegisterUserRequestModel,
     });
 
     return res.json({
@@ -26,7 +35,7 @@ export async function registerUser(req: Request, res: Response) {
       message: "User successfully registered!",
     });
   } catch (err) {
-    res.status(500).send("Registration Error");
+    res.status(500).send(`Registration Error: ${err}`);
   }
 }
 
