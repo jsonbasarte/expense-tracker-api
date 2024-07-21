@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { registerUser, loginUser } from "../controllers/authentication";
+import { registerUser, loginUser } from "../controllers/authentication.controller";
 import { body } from "express-validator";
 import fieldValidator from "../middleware/fieldValidator";
 

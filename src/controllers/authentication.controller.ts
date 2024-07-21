@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import generateToken from "../utils/generateToken";
-import { RegisterUserRequestModel } from "../model/AuthModel";
+import { RegisterUserRequestModel } from "../model/request/auth-request.model";
 
 const prisma = new PrismaClient();
 
@@ -64,6 +64,6 @@ export async function loginUser(req: Request, res: Response) {
       token,
     });
   } catch (err) {
-    res.status(500).send(`Login error: ${err}`);
+    res.status(500).send(`Login error: Invalid Credential`);
   }
 }
