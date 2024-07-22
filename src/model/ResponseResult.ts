@@ -1,21 +1,16 @@
-interface IResponseData<T> {
-  data: T;
-}
 
 export class ResponseResult<T> {
-  success: boolean;
-  message: string;
-  data: IResponseData<T>;
-  constructor(success: boolean, message: string, data: IResponseData<T>) {
-    this.success = success;
-    this.message = message;
+  data: T;
+  success?: boolean;
+  message?: string;
+
+  constructor(
+    data: T,
+    success?: boolean,
+    message?: string,
+  ) {
     this.data = data;
+    this.success = success
+    this.message = message;
   }
-}
-
-
-interface ICompute {
-  x: number;
-  y: number;
-  compute: () => void
 }

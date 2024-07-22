@@ -17,7 +17,7 @@ const authMiddleware = async (
   try {
     const token = req.header("Authorization")?.replace("Bearer ", "");
 
-    if (!token) throw new Error();
+    if (!token) throw new Error("User Not Authorized");
 
     const decoded = jwt.verify(token, SECRET_KEY);
 

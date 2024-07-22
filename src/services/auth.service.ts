@@ -7,15 +7,16 @@ import generateToken from "../utils/generateToken";
 const prisma = new PrismaClient();
 const saltRounds = 8;
 
-interface IResult extends ResponseResult<string[]> {}
+export interface IResult extends ResponseResult<string[]> {}
 
 export async function resgister(params: RegisterUserRequestModel) {
   const { email, username, password } = params;
   const emailExist = await prisma.user.findUnique({
     where: { email },
-  });
+  }); 
 
-  if (emailExist) return { success: false, message: "Email already exist." };
+  if (emailExist)
+    return new ResponseResult<null>(null, false, "Email already exist.");
 
   // TODO enforce strong password
   const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -28,10 +29,7 @@ export async function resgister(params: RegisterUserRequestModel) {
     } as RegisterUserRequestModel,
   });
 
-  return {
-    success: true,
-    message: "User successfully registered!",
-  };
+  return new ResponseResult<null>(null, true, "User successfully registered!");
 }
 
 export async function login(params: { email: string; password: string }) {
@@ -41,15 +39,15 @@ export async function login(params: { email: string; password: string }) {
     where: { email },
   });
 
-  if (!user) return { error: "Invalid User" };
+  if (!user) return new ResponseResult<null>(null, false, "User Not Existed");
 
   const isPasswordMatch = await bcrypt.compareSync(password, user.password);
 
   if (!isPasswordMatch) {
-    return { error: "Invalid Password" };
+    return new ResponseResult<null>(null, false, "Invalid Password");
   }
 
   const token = generateToken(user.id, email);
 
-  return { success: true, token };
+  return new ResponseResult<{ token: string }>({ token }, true);
 }

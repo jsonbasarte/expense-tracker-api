@@ -1,6 +1,6 @@
 import express, { Express } from "express";
 import dotenv from "dotenv";
-import { authRoute, userRoute, walletRoute } from "./routes";
+import { authRoute, userRoute, walletRoute, categoryRoute } from "./routes";
 import cors from "cors";
 
 // Allows cross origin
@@ -22,6 +22,7 @@ app.use(cors(options))
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
 app.use("/api/wallet", walletRoute);
+app.use("/api/category", categoryRoute);
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
